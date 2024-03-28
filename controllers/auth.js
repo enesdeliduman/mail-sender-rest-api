@@ -29,7 +29,7 @@ module.exports.login = asyncHandler(async (req, res, next) => {
         return res.status(400).json({ success: false, message: "The entered password is incorrect" })
     }
     const token = jwt.sign({
-        _id: _id,
+        _id: user._id,
         name: user.name,
         isAdmin: user.isAdmin,
     }, process.env.JWT_SECRET_KEY)
