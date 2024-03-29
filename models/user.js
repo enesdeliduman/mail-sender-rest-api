@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require("bcrypt")
-const mailSchema=require("./mail")
+const mailSchema = require("./mail")
 
 const UserSchema = new Schema({
     name: {
@@ -53,7 +53,10 @@ const UserSchema = new Schema({
             default: null
         }
     },
-    mails: [mailSchema],
+    mails: {
+        type: [Schema.Types.ObjectId],
+        ref: 'Mail'
+    },
     telephone: {
         type: Number
     }

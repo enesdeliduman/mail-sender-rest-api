@@ -18,7 +18,6 @@ const ErrorHandler = async (err, req, res, next) => {
         console.log("Middleware Error Handling\nURL:", req.url, err.message);
     }
     res.status(statusCode).json({ success: false, message: errorMessage });
-    console.log(err)
 };
 
 module.exports.ErrorHandler = ErrorHandler
