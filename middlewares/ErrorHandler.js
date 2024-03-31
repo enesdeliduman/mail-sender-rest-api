@@ -17,6 +17,7 @@ const ErrorHandler = async (err, req, res, next) => {
     if (res.status == 500) {
         console.log("Middleware Error Handling\nURL:", req.url, err.message);
     }
+    console.log(err)
     res.status(statusCode).json({ success: false, message: errorMessage });
 };
 
