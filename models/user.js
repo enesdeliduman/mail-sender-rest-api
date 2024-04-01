@@ -10,12 +10,6 @@ const UserSchema = new Schema({
         trim: true,
         minLength: [3, "Please provide a name with min length 3"]
     },
-    surname: {
-        type: String,
-        required: [true, "Please enter your surname"],
-        trim: true,
-        minLength: [2, "Please provide a surname with min length 2"]
-    },
     password: {
         type: String,
         required: [true, "Please enter your password"],
@@ -31,18 +25,6 @@ const UserSchema = new Schema({
             "Please provide a valid email"
         ]
     },
-    isAdmin: {
-        type: Boolean,
-        default: false
-    },
-    isConfirm: {
-        type: Boolean,
-        default: false
-    },
-    confirmToken: {
-        type: String,
-        default: null
-    },
     resetPassword: {
         token: {
             type: String,
@@ -52,13 +34,6 @@ const UserSchema = new Schema({
             type: Date,
             default: null
         }
-    },
-    mails: {
-        type: [Schema.Types.ObjectId],
-        ref: 'Mail'
-    },
-    telephone: {
-        type: Number
     }
 });
 UserSchema.pre('save', async function (next) {

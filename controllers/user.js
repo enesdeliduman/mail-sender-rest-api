@@ -6,8 +6,7 @@ const SentMail = require("../models/sentMails")
 const utils = require("../utils/index")
 
 module.exports.getMails = asyncHandler(async (req, res, next) => {
-    const userMails = await User.findById(req.user._id).populate("mails")
-    const mails = userMails.mails
+    const mails = await Mail.find()
     res.status(200).json({ success: true, mails })
 })
 module.exports.getSentMails = asyncHandler(async (req, res, next) => {
@@ -21,17 +20,15 @@ module.exports.sendMail = asyncHandler(async (req, res, next) => {
     if (!subject || !message) {
         return res.status(400).json({ success: true, message: "Please enter the subject and message parts completely." })
     }
-    const mails = await User.findById(req.user._id)
-        .populate("mails")
-        .select("mails -_id");
-    if (mails.mails.length == 0) {
+    const mails = await Mail.find()
+    if (mails.length == 0) {
         return res.status(400).json({ success: true, message: "Registered email addresses is 0." })
     }
     const newMail = await SentMail.create({
         subject,
         message,
     })
-    for (const mail of mails.mails) {
+    for (const mail of mails) {
         await sendMail.sendMail({
             to: mail.mail,
             subject: subject,
@@ -52,7 +49,6 @@ module.exports.addMailAddress = asyncHandler(async (req, res, next) => {
         name: obj.name,
         mail: obj.mail
     });
-    await User.findByIdAndUpdate(req.user._id, { $push: { mails: mail._id } }, { new: true });
     res.status(200).json({ success: true, message: "Mail was added successfully", obj })
 })
 module.exports.addMailAddressesBulk = asyncHandler(async (req, res, next) => {
@@ -63,7 +59,6 @@ module.exports.addMailAddressesBulk = asyncHandler(async (req, res, next) => {
                 mail: obj.mail,
                 name: obj.name
             })
-            await User.findByIdAndUpdate(req.user._id, { $push: { mails: mail._id } }, { new: true });
         }
         catch (err) {
             if (err.code === 11000) {
@@ -79,5 +74,4 @@ module.exports.deleteMail = asyncHandler(async (req, res, next) => {
     if (utils.isValidObjectId(id, res)) return
     await Mail.findByIdAndDelete(id)
     return res.status(200).json({ success: true, message: "Mail was deleted successfully", obj })
-
 })
